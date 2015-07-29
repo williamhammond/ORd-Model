@@ -86,7 +86,7 @@ for (i in 1:nx)
 
 #Parameters
 # Initalize parameters with the proper distribution size
-dSize <- 8
+dSize <- 4
 distros <- getDistribution(dSize) 
 GNa  <- distros [1,]
 gNal <- distros [2,]

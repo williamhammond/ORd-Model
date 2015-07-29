@@ -10,8 +10,7 @@ getDistribution <- function(x){
   Gncx <- 0.0008 #8
   Pnak <- 30     #9
   bt   <-4.7    #10
-  # input_variables <- c(GNa,gNal,Gto,PCa,GKr,GKs,GK1,Gncx,Pnak,bt)
-  input_variables <- c(GNa,gNal,Gto,GKr,GKs)
+  input_variables <- c(GNa,gNal,Gto,PCa,GKr,GKs,GK1,Gncx,Pnak,bt)
   distributions <- 
-    matrix( rnorm(x*5,mean=input_variables,sd=input_variables*.3), 5, x) 
+    matrix( rnorm(x*10,mean=input_variables,sd=input_variables*.3), 10, x) 
 }
