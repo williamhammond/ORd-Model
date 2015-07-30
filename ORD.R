@@ -6,7 +6,6 @@
 #   by Thomas O'Hara, Laszlo Virag, Andras Varro, and Yoram Rudy
 #   This implementation is based off of work done by Mohamed Elshrif
 
-
 #TODO:
 #   Organize the variables, label the variables, see if its possible to make more of these locals
 #   ul
@@ -86,7 +85,7 @@ for (i in 1:nx)
 
 #Parameters
 # Initalize parameters with the proper distribution size
-dSize <- 4
+dSize <- 2
 distros <- getDistribution(dSize) 
 GNa  <- distros [1,]
 gNal <- distros [2,]
@@ -128,8 +127,7 @@ RToF <- 1 / FoRT
 #Check all these in the same if? 
 
 #for (dCount in 1:dSize)
-loopenv <- new.env()
-foreach(dCount=1:dSize, .combine=rbind)%do%
+res <- foreach(dCount=1:dSize, .combine=rbind)%dopar%
 {
   icelltype  <-  1 
   if (icelltype == 1)
@@ -420,6 +418,8 @@ foreach(dCount=1:dSize, .combine=rbind)%do%
   }
   caiC     <- 1
   count    <- 1
+  initoutput   <- "fort."
+  initvoltfile <- "Voltage."
   #      current2 <- 'Incx.xxxx'
   CaMKa = CaMK_trap[1]
   # file.create(voltfile)
@@ -506,7 +506,7 @@ foreach(dCount=1:dSize, .combine=rbind)%do%
         
         jCaMK[i]  <-  jss[iv1]-(jss[iv1]-jCaMK[i])*exptaujCaMK[iv1]
         fINap <- (1.0/(1.0+KmCaMK/CaMKa))
-        INa <- GNa[dCount]*(v[i]-ENa)*xm[i]*xm[i]*xm[i]*((1.0-fINap) *
+        INa <- GNa*(v[i]-ENa)*xm[i]*xm[i]*xm[i]*((1.0-fINap) *
                                                    xh*xj[i]+fINap*hp*jCaMK[i])
         
         #calculate INaL
@@ -920,22 +920,21 @@ foreach(dCount=1:dSize, .combine=rbind)%do%
 #                  xrs,xs1,xs2,xk1,Jrel_NP,Jrel_CaMK,CaMK_trap,
 #                  JnakNa,JNakK)), file = output,append=TRUE,sep="\n")
   }# End Main Loop
-  
+
   ionFeatures <- extractIonFeatures(cai_array)
   voltageFeatures <- extractAPFeatures(v_array)
-  loopenv$features[[dCount]] <- c(ionFeatures,voltageFeatures)
-  #esults <- rbind(results, c(ionFeatures,voltageFeatures))
+  features[[dCount]] <- c(ionFeatures,voltageFeatures)
   #close("tmp.txt")
   #close(voltFileConn)  
 }
 
-resultFileConn <- file("results.txt")
-#results <- do.call(rbind,features)
-# write.table(results, file = resultFileConn, sep = '\t', col.names = FALSE, 
-#             row.names = FALSE)
+resultFileConn <- file("Results/results.txt")
+write.table(res, file = resultFileConn, sep = '\t', col.names = FALSE, 
+            row.names = FALSE)
 
-stopCluster(clx)
-#stopImplicitCluster()
+
+#stopCluster(clx)
+stopImplicitCluster()
 proc.time() - ptm
  
 

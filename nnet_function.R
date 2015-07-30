@@ -10,10 +10,10 @@ library(clusterSim)
 conductance_names <- c('GNa', 'gNal', 'gto', 'PCa', 'GKr','GKs','GK1','Gncx','Pnak',
                        'bt')
 
-results_N <- read.table("results_normal.txt")
-results_HF <- read.table("results_HF.txt")
-distro_N <- read.table("distro_normal.txt")
-distro_HF <- read.table("distro_HF.txt")
+results_N <- read.table("Results/results_normal.txt")
+results_HF <- read.table("Results/results_hf.txt")
+distro_N <- read.table("Reslts/distro_normal.txt")
+distro_HF <- read.table("Results/distro_HF.txt")
 
 features <- do.call(rbind, list(results_N,results_HF))
 # features[,1] <- NULL
@@ -53,26 +53,27 @@ test <- testing[sample(nrow(testing)),]
 model_nnet <- nnet(x=train[,11:26], hidden = 1000000000000000, 
                    y=train[,1:10], size=35,maxit = 10000, linout = TRUE, 
                    trace = TRUE)
-x=train[,11:26]
-y=train[,1:10]
-model_nnet <- neuralnet(AND+OR~, x, hidden=1, threshold=0.01, 
-                        stepmax=1000, rep=1, startweights=NULL, algorithm = "rprop+", 
-                        learningrate.limit = NULL, 
-                        learningrate.factor = list(minus = 0.5, plus = 1.2), 
-                        learningrate=NULL, lifesign = "none",lifesign.step = 1000,
-                        err.fct = "sse", act.fct = "logistic", 
-                        linear.output = TRUE, exclude = NULL, constant.weights = NULL, 
-                        likelihood = FALSE)
+# x=train[,11:26]
+# y=train[,1:10]
+# model_nnet <- neuralnet(AND+OR~, x, hidden=1, threshold=0.01, 
+#                         stepmax=1000, rep=1, startweights=NULL, algorithm = "rprop+", 
+#                         learningrate.limit = NULL, 
+#                         learningrate.factor = list(minus = 0.5, plus = 1.2), 
+#                         learningrate=NULL, lifesign = "none",lifesign.step = 1000,
+#                         err.fct = "sse", act.fct = "logistic", 
+#                         linear.output = TRUE, exclude = NULL, constant.weights = NULL, 
+#                         likelihood = FALSE)
 
 # Print the summary of the neural net model you built
 model_nnet
-for(i in 1:10){
-  name = conductance_names[i]
-  title = paste(name, 'residual')
-  jpeg(paste(title,'.jpeg',sep = ''))
-  plot (model_nnet$residuals[,i], xlab = 'index', ylab = name, main = title )
-  dev.off()
-}
+### RESIDUALS ### 
+# for(i in 1:10){
+#   name = conductance_names[i]
+#   title = paste(name, 'residual')
+#   jpeg(file = paste('Results',title,'.jpeg',sep = ''))
+#   plot (model_nnet$residuals[,i], xlab = 'index', ylab = name, main = title )
+#   dev.off()
+# }
 
 # Use the model for prediction pruposes
 predicted=predict(model_nnet, test_output, type = "raw")
