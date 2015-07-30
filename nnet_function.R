@@ -1,20 +1,15 @@
-# Example of using Neural Networks (nnet) for Prediction Purposes
-
 library(nnet)
 library(neuralnet)
 library(clusterSim)
 
 
-#setwd("/Users/mme4362/R_Project_Will/Neural_Net/")
-
+### Read in Result Data ###
 results_N <- read.table("Results/results_normal.txt")
 results_HF <- read.table("Results/results_hf.txt")
 distro_N <- read.table("Reslts/distro_normal.txt")
 distro_HF <- read.table("Results/distro_HF.txt")
 
 features <- do.call(rbind, list(results_N,results_HF))
-# features[,1] <- NULL
-# features[,51] <- NULL
 distroMatrix <- do.call(cbind, list(distro_N,distro_HF))
 
 
@@ -25,19 +20,28 @@ x <- t(x)
 y <- features
 #y <- t(y)
 
+### Get # of runs to handle variable sample size ###
+combinedSize <- dim(y)[1]
+numRuns <- combinedSize / 2 # Divide By 2 b/c y has normal and HF
+
+
+trainingSize <- (numRuns - numRuns * .2)
+testSize <- (numRuns - numRuns * .8)
+
 
 
 # Create training and testing data (Note that the data is in random order)
 # Usually the taining set is 2/3 and the testing set is 1/3
+HF_Start <- numRuns + 1
 # train_input <- rbind(x[1:400,],x[501:900,])
 # test_input <- rbind(x[401:500,],x[901:1000,])
-train_input <- x[501:900,]
-test_input <- x[901:1000,]
+train_input <- x[HF_Start:(numRuns + trainingSize),]
+test_input <- x[(HF_Start + trainingSize):combinedSize,]
 
 # train_output <- rbind(y[1:400,],y[501:900,])
 # test_output <- rbind(y[401:500,],y[901:1000,])
-train_output <- y[501:900,]
-test_output <- y[901:1000,] 
+train_output <- y[HF_Start:(numRuns + trainingSize),]
+test_output <- y[(HF_Start + trainingSize):combinedSize,] 
 
 training <- cbind(train_input, train_output)
 train <- training[sample(nrow(training)),]
