@@ -65,9 +65,6 @@ model_nnet <- nnet(x=train[,11:26], hidden = 1000000000000000,
 #                         linear.output = TRUE, exclude = NULL, constant.weights = NULL, 
 #                         likelihood = FALSE)
 
-# Print the summary of the neural net model you built
-model_nnet
-
 # Use the model for prediction pruposes
 predicted=predict(model_nnet, test_output, type = "raw")
 
