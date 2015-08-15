@@ -60,9 +60,6 @@ model_nnet <- neuralnet(y[,1]~V1+V2+V3+V4+V5+V6+V7+V8+V9+V10+V11+V12+
                           V13+V14+V15+V16,x,hidden = 1, rep=100, 
                           err.fct = 'sse')
 
-# Print the summary of the neural net model you built
-model_nnet
-
 # Use the model for prediction pruposes
 predicted=predict(model_nnet, test_output, type = "raw")
 
