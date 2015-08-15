@@ -51,19 +51,14 @@ test <- testing[sample(nrow(testing)),]
 
 
 # Build your Artificial Neural Network Model
-model_nnet <- nnet(x=train[,11:26], hidden = 1000000000000000, 
-                   y=train[,1:10], size=35,maxit = 10000, linout = TRUE, 
-                   trace = TRUE)
-# x=train[,11:26]
-# y=train[,1:10]
-# model_nnet <- neuralnet(AND+OR~, x, hidden=1, threshold=0.01, 
-#                         stepmax=1000, rep=1, startweights=NULL, algorithm = "rprop+", 
-#                         learningrate.limit = NULL, 
-#                         learningrate.factor = list(minus = 0.5, plus = 1.2), 
-#                         learningrate=NULL, lifesign = "none",lifesign.step = 1000,
-#                         err.fct = "sse", act.fct = "logistic", 
-#                         linear.output = TRUE, exclude = NULL, constant.weights = NULL, 
-#                         likelihood = FALSE)
+# model_nnet <- nnet(x=train[,11:26], hidden = 1000000000000000, 
+#                    y=train[,1:10], size=35,maxit = 10000, linout = TRUE, 
+#                    trace = TRUE)
+x=train[,11:26]
+y=train[,1:10]
+model_nnet <- neuralnet(y[,1]~V1+V2+V3+V4+V5+V6+V7+V8+V9+V10+V11+V12+
+                          V13+V14+V15+V16,x,hidden = 1, rep=100, 
+                          err.fct = 'sse')
 
 # Print the summary of the neural net model you built
 model_nnet
