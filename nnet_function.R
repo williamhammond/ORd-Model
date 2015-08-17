@@ -57,9 +57,9 @@ test <- testing[sample(nrow(testing)),]
 x=train[,11:26]
 y=train[,1:10]
 model_nnet <- neuralnet(y[,1]~V1+V2+V3+V4+V5+V6+V7+V8+V9+V10+V11+V12+
-                          V13+V14+V15+V16,x,hidden = 1, err.fct = 'sse',
-                          rep = 10)
-plot(compute(model_nnet, model_nnet$data[,2:17])$net.result)
+                          V13+V14+V15+V16,x,hidden = 10, err.fct = 'sse',
+                          rep = 2)
+plot(compute(model_nnet, x[,1:16])$net.result)
 
 # Use the model for prediction pruposes
 predicted=predict(model_nnet, test_output, type = "raw")
