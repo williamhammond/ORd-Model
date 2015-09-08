@@ -49,6 +49,8 @@ train <- training[sample(nrow(training)),]
 testing <- cbind(test_input, test_output)
 test <- testing[sample(nrow(testing)),]
 
+reduced_x <- subset(x,select = c('V6', 'V7','V8', 'V10', 'V11', 'V14', 'V15', 'V16'))
+reduced_output <- subset(test_output,select = c('V6', 'V7','V8', 'V10', 'V11', 'V14', 'V15', 'V16'))
 # Build your Artificial Neural Network Model
 model_nnet <- nnet(x=train[,11:26], hidden = 1000000000000000, 
                    y=train[,1:10], size=35,maxit = 10000, linout = TRUE, 
@@ -68,19 +70,22 @@ accuracy=((predicted-test_input)/test_input)*100
 test <- as.data.frame(cbind(test_input[,1],predicted[,1],seq(1,100,1)))
 
 # Forward Model
+path <- 'Results/Forward_Full'
+dir.create(path = path, showWarnings = FALSE)
+
+forward_accuracy = matrix(nrow = 100, ncol = 16)
+
 target = train[,11:26]
 n.col = 16
-# forward_predicted = list()
-# forward_accuracy = list()
+
+train_forward <- train[,1:10]
 for (i in 1:n.col){
-  title <- paste('Forward Model',i,sep='')
-  forward_nnet <- nnet(x=train[,1:10], hidden = 1000000000000000, 
+  forward_nnet <- nnet(x=train_forward, hidden = 1000000000000000, 
                        y=target[,i], size=35,maxit = 10000, linout = TRUE, 
                        trace = TRUE)
   forward_predicted=predict(forward_nnet, test_input, type = "raw")
-  forward_accuracy= ((forward_predicted-test_output[,i])/test_output[,i])*100
-  
-  jpeg (paste(title,'.jpeg', sep =''))
-  plot(forward_accuracy)
-  dev.off()
+  curr_accuracy=((forward_predicted-test_output[,i])/test_output[,i])*100
+  forward_accuracy[,i] <- curr_accuracy
 }
+
+genAccuracyGraphs(accuracy = forward_accuracy, path = path, forward = TRUE)

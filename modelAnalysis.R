@@ -1,16 +1,23 @@
 #File    : modelAnalysis.R
 #Author  : William Hammond
 #Date    : 7/30/2015
-#Modified: 7/30/2015
+#Modified: 9/08/2015
 
 conductance_names <- c('GNa', 'gNal', 'gto', 'PCa', 'GKr','GKs','GK1','Gncx','Pnak',
                        'bt')
+feature_names <- c('v_apd','RMP','v_peak','v_amp','v_notch','V_maxvelocity','T_Triangluation',
+                   'V_triangulation','v90','v50','diastolic','I_peak','I_amp','I90','I50','T1_I90')
 
-genAccuracyGraphs <- function(accuracy, path, parameters, normalized = FALSE){
-  for (i in 1:10){
-    name = conductance_names[i]
-    title = paste(name, "Accuracy") 
-    jpeg (paste(path,title,'.jpeg', sep =''))
+genAccuracyGraphs <- function(accuracy, path, normalized = FALSE, forward = FALSE){
+  for (i in 1:ncol(accuracy)){
+    if (!forward){ # We are predicting conductances
+      name = conductance_names[i]
+      title = paste(name, "Accuracy") 
+    }else{ # We are predicting APD features 
+      name = feature_names[i]
+      title = paste(name, "Forward_Accuracy") 
+    }
+    jpeg (paste(path,'/',title,'.jpeg', sep =''))
     plot(accuracy[,i], ylab = name, main = title)
     dev.off()
   }
